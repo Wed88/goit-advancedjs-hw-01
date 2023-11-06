@@ -5,11 +5,6 @@ const feedbackFormEl = document.querySelector('.feedback-form');
 
 initForm();
 
-feedbackFormEl.addEventListener('input', event => {
-  event.preventDefault;
-  const formData = new FormData(feedbackFormEl);
-});
-
 function onfeedbackForm(event) {
   let persistedForm = localStorage.getItem(LOCALSTORAGE_KEY);
   persistedForm = persistedForm ? JSON.parse(persistedForm) : {};
@@ -20,7 +15,8 @@ function onfeedbackForm(event) {
 
 feedbackFormEl.addEventListener('input', throttle(onfeedbackForm, 500));
 
-feedbackFormEl.addEventListener('submit', () => {
+feedbackFormEl.addEventListener('submit', (event) => {
+  event.preventDefault();
   console.log('feedback-form-state', JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)));
   localStorage.removeItem(LOCALSTORAGE_KEY);
 });
@@ -34,3 +30,4 @@ function initForm() {
     });
   }
 }
+
