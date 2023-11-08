@@ -5,21 +5,30 @@ const feedbackFormEl = document.querySelector('.feedback-form');
 
 initForm();
 
-function onfeedbackForm(event) {
+function onFeedbackForm(event) {
   let persistedForm = localStorage.getItem(LOCALSTORAGE_KEY);
   persistedForm = persistedForm ? JSON.parse(persistedForm) : {};
   persistedForm[event.target.name] = event.target.value;
   localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(persistedForm));
-  console.log(persistedForm);
 }
 
-feedbackFormEl.addEventListener('input', throttle(onfeedbackForm, 500));
+feedbackFormEl.addEventListener('input', throttle(onFeedbackForm, 500));
 
-feedbackFormEl.addEventListener('submit', (event) => {
+feedbackFormEl.addEventListener('submit', onFeedbackFormSubmit);
+
+function onFeedbackFormSubmit(event) {
   event.preventDefault();
-  console.log('feedback-form-state', JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)));
-  localStorage.removeItem(LOCALSTORAGE_KEY);
-});
+  const formElements = event.currentTarget.elements;
+  const email = formElements.email.value;
+  const message = formElements.message.value;
+  if (email === '' || message === '') {
+    return alert('Attention! All fields must be completed');
+  } else {
+    console.log('feedback-form-state', JSON.parse(localStorage.getItem(LOCALSTORAGE_KEY)));
+    localStorage.removeItem(LOCALSTORAGE_KEY);
+    event.currentTarget.reset();
+  }
+}
 
 function initForm() {
   let persistedForm = localStorage.getItem(LOCALSTORAGE_KEY);
@@ -29,5 +38,6 @@ function initForm() {
       feedbackFormEl.elements[name].value = value;
     });
   }
-}
+};
+
 
